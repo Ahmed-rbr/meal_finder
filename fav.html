@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meals Tracker</title>
+    <link href="/dist/output.css" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen">
+    <header
+      class="flex flex-col md:flex-row items-center text-white font-medium text-2xl justify-between bg-red-300 p-4 w-full gap-4 md:gap-0"
+    >
+      <a class="hover:scale-105 transition-all hover:text-red-400" href="/"
+        >Meal Finder</a
+      >
+
+      <div
+        class="flex flex-col items-center md:flex-row justify-center w-full md:w-auto gap-2"
+      >
+        <input
+          class="focus:outline-none w-4/5 px-4 py-2 border-b-2 flex-1 md:flex-none"
+          type="text"
+          placeholder="enter recipe name or ing..."
+          id="serchInput"
+        />
+        <button class="bg-red-400 px-4 py-2 rounded hover:cursor-pointer">
+          search
+        </button>
+      </div>
+
+      <nav class="flex gap-4 justify-center md:justify-end w-full md:w-auto">
+        <a
+          class="hover:scale-105 transition-all hover:text-red-400"
+          href="/fav.html"
+          >Favorites</a
+        >
+      </nav>
+    </header>
+
+    <main class="flex justify-center items-center m-auto flex-col">
+      <div class="flex items-center gap-2">
+        <select class="text-red-500 text-2xl" id="areaSelect">
+          <option value="" disabled selected>Select an area</option>
+        </select>
+        <select class="text-red-500 text-2xl" id="categorieSelect">
+          <option value="" disabled selected>Select a category</option>
+        </select>
+      </div>
+      <div
+        class="grid-container m-auto w-fit sm:w-full gap-5 p-3 md:w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center"
+      ></div>
+    </main>
+    <footer
+      class="m-auto w-3/5 flex items-center justify-center bg-gray-200 p-4"
+    >
+      <p>made by ahmed-dev</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
