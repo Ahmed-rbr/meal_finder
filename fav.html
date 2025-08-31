@@ -6,27 +6,13 @@
     <title>Meals Tracker</title>
     <link href="/dist/output.css" rel="stylesheet" />
   </head>
-  <body class="min-h-screen">
+  <body class="min-h-screen flex flex-col">
     <header
-      class="flex flex-col md:flex-row items-center text-white font-medium text-2xl justify-between bg-red-300 p-4 w-full gap-4 md:gap-0"
+      class="flex flex-col md:flex-row items-center text-white font-medium text-2xl justify-between bg-blue-300 p-4 w-full gap-4 md:gap-0"
     >
       <a class="hover:scale-105 transition-all hover:text-red-400" href="/"
         >Meal Finder</a
       >
-
-      <div
-        class="flex flex-col items-center md:flex-row justify-center w-full md:w-auto gap-2"
-      >
-        <input
-          class="focus:outline-none w-4/5 px-4 py-2 border-b-2 flex-1 md:flex-none"
-          type="text"
-          placeholder="enter recipe name or ing..."
-          id="serchInput"
-        />
-        <button class="bg-red-400 px-4 py-2 rounded hover:cursor-pointer">
-          search
-        </button>
-      </div>
 
       <nav class="flex gap-4 justify-center md:justify-end w-full md:w-auto">
         <a
@@ -37,24 +23,89 @@
       </nav>
     </header>
 
-    <main class="flex justify-center items-center m-auto flex-col">
-      <div class="flex items-center gap-2">
-        <select class="text-red-500 text-2xl" id="areaSelect">
-          <option value="" disabled selected>Select an area</option>
-        </select>
-        <select class="text-red-500 text-2xl" id="categorieSelect">
-          <option value="" disabled selected>Select a category</option>
-        </select>
-      </div>
+    <main class="flex flex-grow justify-center items-center m-auto flex-col">
       <div
-        class="grid-container m-auto w-fit sm:w-full gap-5 p-3 md:w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center"
+        class="grid-container m-auto w-fit sm:w-full gap-5 p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-center"
       ></div>
     </main>
     <footer
-      class="m-auto w-3/5 flex items-center justify-center bg-gray-200 p-4"
+      class="m-auto w-full flex items-center justify-center bg-gray-200 p-4"
     >
       <p>made by ahmed-dev</p>
     </footer>
-    <script src="script.js"></script>
+
+    <!-- /////////////////////////////////////////////////script///////////////////// -->
+    <script>
+      const gridContainer = document.querySelector(".grid-container");
+
+      const fav = JSON.parse(localStorage.getItem("fav")) || [];
+      const saveFavToLocalStorage = () => {
+        localStorage.setItem("fav", JSON.stringify(fav));
+      };
+      const renderMealCard = (meal) => {
+        const mealDiv = document.createElement("div");
+        mealDiv.className =
+          "meal-card bg-white shadow-md rounded-lg overflow-hidden drop-shadow-2xl flex flex-col items-center p-4 hover:scale-105 transition-transform duration-300";
+
+        const btnContent = fav.some((f) => f.idMeal === meal.idMeal);
+
+        mealDiv.innerHTML = `
+    <img src="${meal.strMealThumb}" alt="${
+          meal.strMeal
+        }" class="w-full h-40 object-cover rounded-lg mb-4">
+    <a href="#" class="text-xl card-title font-semibold mb-2 hover:text-blue-500">${
+      meal.strMeal
+    }</a>
+    <button class="bg-blue-500 favBtn text-white px-4 py-2 rounded hover:bg-blue-600">
+      ${btnContent ? "unsave" : "save"}
+    </button>
+  `;
+
+        mealDiv.setAttribute("data-id", meal.idMeal);
+        return mealDiv;
+      };
+
+      const renderMeals = () => {
+        gridContainer.innerHTML = ``;
+        if (fav.length === 0) {
+          gridContainer.innerHTML =
+            "<p class='m-auto'>Save some Meals to say theme here :)</p>";
+        }
+        fav.forEach((meal) => gridContainer.appendChild(renderMealCard(meal)));
+      };
+      const addToFav = (e) => {
+        if (e.target.classList.contains("favBtn")) {
+          const mealCard = e.target.closest(".meal-card");
+          if (!mealCard) return;
+
+          const thumb = mealCard.querySelector("img").getAttribute("src");
+          const title = mealCard.querySelector(".card-title").textContent;
+          const id = mealCard.getAttribute("data-id");
+
+          const isElementExist = fav.some((m) => m.idMeal === id);
+
+          const cardBody = {
+            strMeal: title,
+            strMealThumb: thumb,
+            idMeal: id,
+          };
+
+          if (!isElementExist) {
+            fav.push(cardBody);
+            e.target.textContent = "unsave";
+          } else {
+            const index = fav.findIndex((m) => m.idMeal === id);
+            if (index !== -1) fav.splice(index, 1);
+            e.target.textContent = "save";
+          }
+
+          saveFavToLocalStorage();
+          renderMeals();
+        }
+      };
+
+      renderMeals();
+      gridContainer.addEventListener("click", addToFav);
+    </script>
   </body>
 </html>
